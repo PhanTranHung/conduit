@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "antd";
-import TabItem from "./TabItem";
+import Comment from "./Comment";
 
 const { TabPane } = Tabs;
 
@@ -13,7 +13,10 @@ class Content extends React.Component {
     return (
       <div>
         <Tabs defaultActiveKey="1" onChange={callback}>
-          <TabItem tab="Global Feed" {...this.props} key="1" />
+          <TabPane tab="Global Feed" key="1">
+            <Comment {...this.props} />
+          </TabPane>
+
           <TabPane tab="Tab 2" key="2">
             Content of Tab Pane 2
           </TabPane>
