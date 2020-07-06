@@ -45,6 +45,10 @@
 
 .custom-list-item-content-action {
   order: 16;
+  display: flex;
+  align-content: space-between;
+  justify-content: space-between;
+  flex: auto;
 }
 
 .nav-bar {
@@ -116,4 +120,8 @@
 
 .tag-list > * {
   margin: 0.2rem;
+}
+
+.ant-list-item-action > li {
+  display: flex;
 }

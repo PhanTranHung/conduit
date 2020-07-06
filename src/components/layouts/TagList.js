@@ -3,6 +3,8 @@ import { Tag } from "antd";
 import axios from "axios";
 // import url from "url";
 
+// const { CheckableTag } = Tag;
+
 const baseUrl = process.env.REACT_APP_SERVER_API;
 
 axios.defaults.baseURL = baseUrl;

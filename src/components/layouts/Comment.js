@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Badge, Button, List } from "antd";
+import { Avatar, Badge, Button, List, Tag } from "antd";
 import { HeartTwoTone } from "@ant-design/icons";
 import axios from "axios";
 
@@ -71,9 +71,19 @@ class Comment extends React.Component {
             className="custom-list"
             actions={[
               <div className="custom-list-item-content-action">
-                <i>read more ...</i>
+                <div>
+                  <i>read more ...</i>
+                </div>
+                {this.props.tag && (
+                  <div className="tag-list" style={{ maxWidth: "65%" }}>
+                    {item.tagList.map((tag, index) => (
+                      <Tag key={index} color="lime">
+                        {tag}
+                      </Tag>
+                    ))}
+                  </div>
+                )}
               </div>,
-              <div>tags here</div>,
             ]}
           >
             <List.Item.Meta
