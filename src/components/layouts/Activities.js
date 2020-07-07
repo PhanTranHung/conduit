@@ -5,9 +5,9 @@ import Comment from "./Comment";
 const { TabPane } = Tabs;
 
 class Activities extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   // componentDidUpdate(prevProps) {
   //   console.log(prevProps.newTab);
@@ -31,7 +31,7 @@ class Activities extends React.Component {
             <Comment {...this.props} />
           </TabPane>
 
-          {activeTab != "global" && (
+          {activeTab !== "global" && (
             <TabPane tab={`#${this.props.newTab}`} key={this.props.newTab}>
               <Comment {...this.props} tag={this.props.newTab} />
             </TabPane>

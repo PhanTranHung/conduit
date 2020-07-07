@@ -15,6 +15,7 @@ class Comment extends React.Component {
       articles: [],
       articlesCount: 0,
     };
+    this.isLoading = true;
   }
 
   async loadComment(func, { url = "", limit = 10, offset = 0, tag = "" } = {}) {
@@ -33,9 +34,10 @@ class Comment extends React.Component {
   }
 
   componentDidMount() {
-    // debugger;
+    this.isLoading = true;
     this.loadComment(
       (res) => {
+        this.isLoading = false;
         this.setState({ ...res.data });
       },
       {
@@ -51,7 +53,7 @@ class Comment extends React.Component {
       </Tag>
     );
 
-    const commentList = (
+    const listComment = (
       <List
         itemLayout="vertical"
         dataSource={this.state.articles}
@@ -106,7 +108,18 @@ class Comment extends React.Component {
       />
     );
 
-    return commentList;
+    const ghostLoading = (
+      <>
+        <Skeleton avatar active paragraph={{ rows: 4 }} />
+        <Skeleton avatar active paragraph={{ rows: 4 }} />
+        <Skeleton avatar active paragraph={{ rows: 4 }} />
+        <Skeleton avatar active paragraph={{ rows: 4 }} />
+        <Skeleton avatar active paragraph={{ rows: 4 }} />
+        <Skeleton avatar active paragraph={{ rows: 4 }} />
+      </>
+    );
+
+    return this.isLoading ? ghostLoading : listComment;
   }
 }
 
