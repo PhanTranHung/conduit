@@ -3,7 +3,7 @@ import { Tag } from "antd";
 import axios from "axios";
 // import url from "url";
 
-// const { CheckableTag } = Tag;
+const { CheckableTag } = Tag;
 
 const baseUrl = process.env.REACT_APP_SERVER_API;
 
@@ -14,6 +14,7 @@ class TagList extends React.Component {
     super(props);
     this.state = {
       tags: [],
+      selectedTag: "",
     };
   }
 
@@ -28,6 +29,11 @@ class TagList extends React.Component {
     this.getTags((res) => this.setState({ tags: res.data.tags }));
   }
 
+  handleTagChange(checked, tag) {
+    this.setState({ selectedTag: tag });
+    this.props.onSelectedTagChange(tag);
+  }
+
   render() {
     return (
       <div className="side-bar">
@@ -35,9 +41,14 @@ class TagList extends React.Component {
           <div className="tag-title">{this.props.title}</div>
           <div className="tag-list">
             {this.state.tags.map((tag, index) => (
-              <Tag key={index} color="green">
+              <CheckableTag
+                key={index}
+                color="green"
+                checked={this.state.selectedTag === tag}
+                onChange={(checked) => this.handleTagChange(checked, tag)}
+              >
                 {tag}
-              </Tag>
+              </CheckableTag>
             ))}
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Badge, Button, List, Tag } from "antd";
+import { Avatar, Badge, Button, List, Tag, Skeleton } from "antd";
 import { HeartTwoTone } from "@ant-design/icons";
 import axios from "axios";
 
@@ -45,7 +45,13 @@ class Comment extends React.Component {
   }
 
   render() {
-    return (
+    const generateTagChild = (tag, index) => (
+      <Tag key={index} color="lime">
+        {tag}
+      </Tag>
+    );
+
+    const commentList = (
       <List
         itemLayout="vertical"
         dataSource={this.state.articles}
@@ -76,11 +82,7 @@ class Comment extends React.Component {
                 </div>
                 {this.props.tag && (
                   <div className="tag-list" style={{ maxWidth: "65%" }}>
-                    {item.tagList.map((tag, index) => (
-                      <Tag key={index} color="lime">
-                        {tag}
-                      </Tag>
-                    ))}
+                    {item.tagList.map(generateTagChild)}
                   </div>
                 )}
               </div>,
@@ -103,6 +105,8 @@ class Comment extends React.Component {
         )}
       />
     );
+
+    return commentList;
   }
 }
 
