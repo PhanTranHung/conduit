@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, Badge, Button, List, Tag, Skeleton } from "antd";
 import { HeartTwoTone } from "@ant-design/icons";
 import axios from "axios";
@@ -7,18 +7,18 @@ const baseUrl = process.env.REACT_APP_SERVER_API;
 const server = process.env.REACT_APP_SERVER;
 
 axios.defaults.baseURL = baseUrl;
+let isLoading = true;
 
-class Comment extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      articles: [],
-      articlesCount: 0,
-    };
-    this.isLoading = true;
-  }
+function Comment(props) {
+  const [articleList, setArticleList] = useState({
+    articles: [],
+    articlesCount: 0,
+  });
 
-  async loadComment(func, { url = "", limit = 10, offset = 0, tag = "" } = {}) {
+  async function loadComment(
+    func,
+    { url = "", limit = 10, offset = 0, tag = "" } = {}
+  ) {
     // articles?limit=10&offset=0
     return axios({
       method: "GET",
@@ -29,39 +29,37 @@ class Comment extends React.Component {
         tag: tag,
       },
     })
-      .then(func)
-      .catch((err) => console.log(err));
+      .then((res) => func(res.data))
+      .catch((err) => console.error(err));
   }
 
-  componentDidMount() {
-    this.isLoading = true;
-    this.loadComment(
-      (res) => {
-        this.isLoading = false;
-        this.setState({ ...res.data });
+  useEffect(() => {
+    isLoading = true;
+    loadComment(
+      (data) => {
+        isLoading = false;
+        setArticleList(data);
       },
-      {
-        ...this.props,
-      }
+      { ...props }
     );
-  }
+  });
 
-  render() {
-    const generateTagChild = (tag, index) => (
-      <Tag key={index} color="lime">
-        {tag}
-      </Tag>
-    );
+  let generateTagChild = (tag, index) => (
+    <Tag key={index} color="lime">
+      {tag}
+    </Tag>
+  );
 
+  return (() => {
     const listComment = (
       <List
         itemLayout="vertical"
-        dataSource={this.state.articles}
+        dataSource={articleList.articles}
         pagination={{
           onChange: (page) => {
             console.log(page);
           },
-          pageSize: this.props.pageSize,
+          pageSize: props.pageSize,
         }}
         renderItem={(item) => (
           <List.Item
@@ -82,7 +80,7 @@ class Comment extends React.Component {
                 <div>
                   <i>read more ...</i>
                 </div>
-                {this.props.tag && (
+                {props.tag && (
                   <div className="tag-list" style={{ maxWidth: "65%" }}>
                     {item.tagList.map(generateTagChild)}
                   </div>
@@ -119,8 +117,8 @@ class Comment extends React.Component {
       </>
     );
 
-    return this.isLoading ? ghostLoading : listComment;
-  }
+    return isLoading ? ghostLoading : listComment;
+  })();
 }
 
 export default Comment;

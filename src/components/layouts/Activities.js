@@ -4,42 +4,23 @@ import Comment from "./Comment";
 
 const { TabPane } = Tabs;
 
-class Activities extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+function Activities(props) {
+  let activeTab = props.newTab.length > 0 ? props.newTab : "global";
+  return (
+    <div>
+      <Tabs activeKey={activeTab} onTabClick={() => props.onTabChange("")}>
+        <TabPane tab="Global Feed" key="global">
+          <Comment {...props} />
+        </TabPane>
 
-  // componentDidUpdate(prevProps) {
-  //   console.log(prevProps.newTab);
-  //   if (this.props.newTab !== prevProps.newTab) {
-  //     console.log(this.props.newTab);
-  //   }
-  // }
-
-  handleClicked = (key, event) => {
-    this.props.onTabChange("");
-  };
-
-  render() {
-    // console.log(this.props.newTab);
-    const activeTab =
-      this.props.newTab.length > 0 ? this.props.newTab : "global";
-    return (
-      <div>
-        <Tabs activeKey={activeTab} onTabClick={this.handleClicked}>
-          <TabPane tab="Global Feed" key="global">
-            <Comment {...this.props} />
+        {activeTab !== "global" && (
+          <TabPane tab={`#${props.newTab}`} key={props.newTab}>
+            <Comment {...props} tag={props.newTab} />
           </TabPane>
-
-          {activeTab !== "global" && (
-            <TabPane tab={`#${this.props.newTab}`} key={this.props.newTab}>
-              <Comment {...this.props} tag={this.props.newTab} />
-            </TabPane>
-          )}
-        </Tabs>
-      </div>
-    );
-  }
+        )}
+      </Tabs>
+    </div>
+  );
 }
 
 export default Activities;
