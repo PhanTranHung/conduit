@@ -8,13 +8,14 @@ const server = process.env.REACT_APP_SERVER;
 
 axios.defaults.baseURL = baseUrl;
 let isLoading = true;
+const initAclicle = {
+  articles: [],
+  articlesCount: 0,
+};
 
 function Comment(props) {
-  console.log("render commponent");
-  const [articleList, setArticleList] = useState({
-    articles: [],
-    articlesCount: 0,
-  });
+  console.log("render commponent: Tag " + props.tag);
+  const [articleList, setArticleList] = useState(initAclicle);
 
   async function loadArticles(
     func,
@@ -36,14 +37,17 @@ function Comment(props) {
 
   useEffect(() => {
     isLoading = true;
+    let isMounted = true;
     setArticleList(null);
     loadArticles(
       (data) => {
         isLoading = false;
-        setArticleList(data);
+        if (isMounted) setArticleList(data);
       },
       { ...props }
     );
+    return () => (isMounted = false);
+    // eslint-disable-next-line
   }, []);
 
   let generateTagChild = (tag, index) => (
@@ -63,7 +67,7 @@ function Comment(props) {
     </>
   );
 
-  if (isLoading) return ghostLoading;
+  if (isLoading || !articleList) return ghostLoading;
 
   const listComment = (
     <List

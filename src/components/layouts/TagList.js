@@ -1,30 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Tag } from "antd";
 import axios from "axios";
-// import url from "url";
+
+import { TagContext } from "../contexts/tag-context";
 
 const { CheckableTag } = Tag;
-
 const baseUrl = process.env.REACT_APP_SERVER_API;
-
 axios.defaults.baseURL = baseUrl;
 
 function TagList(props) {
-  let [tags, setTag] = useState([]);
-
-  async function getTags(func) {
-    return axios
-      .get(props.url)
-      .then(func)
-      .catch((err) => console.log(err));
-  }
+  const [tags, setTag] = useState([]);
+  const [state, dispatch] = useContext(TagContext);
+  console.log(state);
+  const addTag = (tag) => {
+    dispatch({
+      type: "CLICKED_TAG",
+      payload: {
+        key: tag,
+        tab: tag,
+      },
+    });
+  };
 
   useEffect(() => {
     console.log("component");
-    if (tags.length <= 0) getTags((res) => setTag(res.data.tags));
-  }, []);
+    const getTags = (func) => {
+      return axios
+        .get(props.url)
+        .then(func)
+        .catch((err) => console.log(err));
+    };
 
-  useEffect(() => {});
+    getTags((res) => setTag(res.data.tags));
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div className="side-bar">
@@ -35,8 +44,8 @@ function TagList(props) {
             <CheckableTag
               key={tag}
               color="green"
-              checked={props.selectedTag === tag}
-              onChange={(checked) => props.onSelectedTagChange(tag)}
+              checked={state.key === tag}
+              onChange={(checked) => addTag(tag)}
             >
               {tag}
             </CheckableTag>
