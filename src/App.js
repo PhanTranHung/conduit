@@ -33,7 +33,9 @@ function App(props) {
                 url="tags"
                 title="Popular Tags"
                 selectedTag={selectedTag}
-                onSelectedTagChange={setSelectedTag}
+                onSelectedTagChange={(tag) => {
+                  setSelectedTag(tag);
+                }}
               />
             </Col>
           </Row>

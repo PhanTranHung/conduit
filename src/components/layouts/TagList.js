@@ -20,8 +20,9 @@ function TagList(props) {
   }
 
   useEffect(() => {
+    console.log("component");
     if (tags.length <= 0) getTags((res) => setTag(res.data.tags));
-  });
+  }, []);
 
   useEffect(() => {});
 
