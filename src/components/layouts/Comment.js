@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Badge, Button, List, Tag, Skeleton } from "antd";
-import { HeartTwoTone } from "@ant-design/icons";
+import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
 import axios from "axios";
 
 const baseUrl = process.env.REACT_APP_SERVER_API;
@@ -9,13 +9,15 @@ const server = process.env.REACT_APP_SERVER;
 axios.defaults.baseURL = baseUrl;
 let isLoading = true;
 const initAclicle = {
-  articles: [],
+  //articles{page}[list]
+  articles: {},
   articlesCount: 0,
 };
 
 function Comment(props) {
-  console.log("render commponent: Tag " + props.tag);
   const [articleList, setArticleList] = useState(initAclicle);
+  const [page, setSelectedPage] = useState(1);
+  console.log("render commponent: comment " + page + " Tab: " + props.tag);
 
   async function loadArticles(
     func,
@@ -36,25 +38,49 @@ function Comment(props) {
   }
 
   useEffect(() => {
-    isLoading = true;
-    let isMounted = true;
-    setArticleList(null);
-    loadArticles(
-      (data) => {
-        isLoading = false;
-        if (isMounted) setArticleList(data);
-      },
-      { ...props }
-    );
-    return () => (isMounted = false);
+    console.log("useEffect: comment " + page);
+    if (!articleList.articles[page]) {
+      isLoading = true;
+      let isMounted = true;
+      setArticleList(null);
+      loadArticles(
+        (data) => {
+          isLoading = false;
+          if (isMounted) {
+            const d = Object.assign({}, articleList, {
+              articles: { [page]: data.articles },
+              articlesCount: data.articlesCount,
+            });
+            // console.log(d);
+            setArticleList(d);
+          }
+        },
+        { ...props, offset: page }
+      );
+      return () => (isMounted = false);
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [page]);
 
   let generateTagChild = (tag, index) => (
     <Tag key={index} color="lime">
       {tag}
     </Tag>
   );
+
+  const changePage = (pageNumber) => {
+    setSelectedPage(pageNumber);
+  };
+
+  function itemRender(current, type, originalElement) {
+    if (type === "prev") {
+      return <div>Previous</div>;
+    }
+    if (type === "next") {
+      return <div>Next</div>;
+    }
+    return originalElement;
+  }
 
   const ghostLoading = (
     <>
@@ -72,19 +98,27 @@ function Comment(props) {
   const listComment = (
     <List
       itemLayout="vertical"
-      dataSource={articleList.articles}
+      dataSource={articleList.articles[page]}
       pagination={{
-        onChange: (page) => {
-          console.log(page);
-        },
         pageSize: props.pageSize,
+        total: articleList.articlesCount,
+        defaultCurrent: 1,
+        showQuickJumper: true,
+        onChange: changePage,
+        itemRender: itemRender,
+        current: page,
+        showSizeChanger: false,
       }}
       renderItem={(item) => (
         <List.Item
           extra={
-            <Badge count={item.favorited ? item.favoritesCount : ""}>
+            <Badge count={item.favoritesCount}>
               <Button type="text" shape="round" className="button-border-green">
-                <HeartTwoTone twoToneColor="#52c41a" />
+                {item.favorited ? (
+                  <HeartFilled />
+                ) : (
+                  <HeartTwoTone twoToneColor="#52c41a" />
+                )}
               </Button>
             </Badge>
           }

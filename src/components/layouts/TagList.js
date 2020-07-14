@@ -1,29 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Tag } from "antd";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import SelecableTag from "../../containers/SelecableTag";
 
-import { TagContext } from "../contexts/tag-context";
-
-const { CheckableTag } = Tag;
 const baseUrl = process.env.REACT_APP_SERVER_API;
 axios.defaults.baseURL = baseUrl;
 
 function TagList(props) {
   const [tags, setTag] = useState([]);
-  const [state, dispatch] = useContext(TagContext);
-  console.log(state);
-  const addTag = (tag) => {
-    dispatch({
-      type: "CLICKED_TAG",
-      payload: {
-        key: tag,
-        tab: tag,
-      },
-    });
-  };
-
+  // console.log("Taglist");
   useEffect(() => {
-    console.log("component");
+    // console.log("component");
     const getTags = (func) => {
       return axios
         .get(props.url)
@@ -41,14 +27,7 @@ function TagList(props) {
         <div className="tag-title">{props.title}</div>
         <div className="tag-list">
           {tags.map((tag, index) => (
-            <CheckableTag
-              key={tag}
-              color="green"
-              checked={state.key === tag}
-              onChange={(checked) => addTag(tag)}
-            >
-              {tag}
-            </CheckableTag>
+            <SelecableTag tag={tag} key={tag} />
           ))}
         </div>
       </div>

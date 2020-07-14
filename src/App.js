@@ -3,9 +3,8 @@ import "./App.css";
 import { Layout, Row, Col } from "antd";
 import Header from "./components/layouts/Header";
 import Banner from "./components/layouts/Banner";
-import Activities from "./components/layouts/Activities";
 import TagList from "./components/layouts/TagList";
-import { TagContextProvider } from "./components/contexts/tag-context";
+import TabContainer from "./containers/TabContainer";
 
 const { Footer, Content } = Layout;
 
@@ -16,21 +15,19 @@ function App(props) {
       <Banner />
       <Content className="page">
         <div className="container">
-          <TagContextProvider>
-            <Row>
-              <Col span="18">
-                <Activities
-                  url="articles"
-                  limit="50"
-                  offset="0"
-                  pageSize="10"
-                />
-              </Col>
-              <Col span="6">
-                <TagList url="tags" title="Popular Tags" />
-              </Col>
-            </Row>
-          </TagContextProvider>
+          <Row>
+            <Col span="18">
+              <TabContainer
+                url="articles"
+                limit="10"
+                offset="0"
+                pageSize="10"
+              />
+            </Col>
+            <Col span="6">
+              <TagList url="tags" title="Popular Tags" />
+            </Col>
+          </Row>
         </div>
       </Content>
       <Footer>Footer</Footer>
