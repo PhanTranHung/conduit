@@ -5,9 +5,8 @@ import Comment from "./Comment";
 
 const { TabPane } = Tabs;
 
-function Activities(props) {
+function Activities({ state, removeThisTab, ...props }) {
   // console.log(props);
-  const { state, removeThisTab, ...otherProps } = props;
   const hasSecondTab = state.key !== "";
 
   return (
@@ -17,12 +16,12 @@ function Activities(props) {
         onTabClick={(tabName) => removeThisTab(tabName)}
       >
         <TabPane tab="Global Feed" key="global">
-          <Comment {...otherProps} />
+          <Comment {...props} />
         </TabPane>
 
         {hasSecondTab && (
           <TabPane tab={`#${state.key}`} key={state.key}>
-            <Comment {...otherProps} tag={state.key} />
+            <Comment {...props} tag={state.key} />
           </TabPane>
         )}
       </Tabs>

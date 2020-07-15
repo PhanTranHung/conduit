@@ -4,11 +4,21 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import changeTabReducer from "./reducers/change-tab-reducers";
-import { createStore } from "redux";
+import reducer from "./reducers";
+import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import createSagaMiddleware from "redux-saga";
+import saga from "./saga";
 
-const store = createStore(changeTabReducer);
+// create the saga middleware
+const sagaMiddleware = createSagaMiddleware();
+
+// mount it on the Store
+// const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+
+// then run the saga
+sagaMiddleware.run(saga);
 
 ReactDOM.render(
   // <React.StrictMode>

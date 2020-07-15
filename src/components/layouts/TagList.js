@@ -1,32 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import SelecableTag from "../../containers/SelecableTag";
+import { connect } from "react-redux";
+import { tagFetchRequest } from "../../actions/fetch-tag-actions";
 
 const baseUrl = process.env.REACT_APP_SERVER_API;
 axios.defaults.baseURL = baseUrl;
 
-function TagList(props) {
-  const [tags, setTag] = useState([]);
-  // console.log("Taglist");
+function TagList({ state, tagFetchRequest, ...props }) {
+  console.log(props);
   useEffect(() => {
     // console.log("component");
-    const getTags = (func) => {
-      return axios
-        .get(props.url)
-        .then(func)
-        .catch((err) => console.log(err));
-    };
-
-    getTags((res) => setTag(res.data.tags));
+    tagFetchRequest();
     // eslint-disable-next-line
   }, []);
-
+  debugger;
   return (
     <div className="side-bar">
       <div className="side-bar-inner">
         <div className="tag-title">{props.title}</div>
         <div className="tag-list">
-          {tags.map((tag, index) => (
+          {state.tags.map((tag, index) => (
             <SelecableTag tag={tag} key={tag} />
           ))}
         </div>
@@ -34,4 +28,6 @@ function TagList(props) {
     </div>
   );
 }
-export default TagList;
+export default connect((state) => ({ state: state.fetchTag }), {
+  tagFetchRequest,
+})(TagList);

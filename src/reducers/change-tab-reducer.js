@@ -3,7 +3,6 @@ import {
   REMOVE_CLICKED_TAG,
   initinalTab,
 } from "../actions/change-tab-actions";
-// import { combineReducers } from "redux";
 
 const changeTabReducer = (state = initinalTab, action) => {
   switch (action.type) {

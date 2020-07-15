@@ -3,8 +3,8 @@ import { clickedTag } from "../actions/change-tab-actions";
 import TagItem from "../components/layouts/TagItem";
 
 const mapStateToProps = (state) => {
-  //   console.log(state);
-  return { state };
+  // console.log(state);
+  return { state: state.changeTab };
 };
 const mapDispatchToProps = (dispatch) => ({
   changeTab: (tag) => {

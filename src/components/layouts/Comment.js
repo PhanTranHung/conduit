@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Badge, Button, List, Tag, Skeleton } from "antd";
 import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
-import axios from "axios";
+import { fetchArticles } from "../../requests/API";
 
-const baseUrl = process.env.REACT_APP_SERVER_API;
 const server = process.env.REACT_APP_SERVER;
 
-axios.defaults.baseURL = baseUrl;
 let isLoading = true;
 const initAclicle = {
   //articles{page}[list]
@@ -17,46 +15,27 @@ const initAclicle = {
 function Comment(props) {
   const [articleList, setArticleList] = useState(initAclicle);
   const [page, setSelectedPage] = useState(1);
-  console.log("render commponent: comment " + page + " Tab: " + props.tag);
-
-  async function loadArticles(
-    func,
-    { url = "", limit = 10, offset = 0, tag = "" } = {}
-  ) {
-    // articles?limit=10&offset=0
-    return axios({
-      method: "GET",
-      url: url,
-      params: {
-        limit: limit,
-        offset: offset,
-        tag: tag,
-      },
-    })
-      .then((res) => func(res.data))
-      .catch((err) => console.error(err));
-  }
+  // console.log("render commponent: comment " + page + " Tab: " + props.tag);
 
   useEffect(() => {
-    console.log("useEffect: comment " + page);
+    // console.log(articleList);
     if (!articleList.articles[page]) {
       isLoading = true;
       let isMounted = true;
       setArticleList(null);
-      loadArticles(
-        (data) => {
+      fetchArticles({ ...props, offset: page })
+        .then((data) => {
           isLoading = false;
           if (isMounted) {
-            const d = Object.assign({}, articleList, {
-              articles: { [page]: data.articles },
+            const d = {
+              articles: { ...articleList.articles, [page]: data.articles },
               articlesCount: data.articlesCount,
-            });
+            };
             // console.log(d);
             setArticleList(d);
           }
-        },
-        { ...props, offset: page }
-      );
+        })
+        .catch((err) => console.error(err));
       return () => (isMounted = false);
     }
     // eslint-disable-next-line
@@ -73,23 +52,16 @@ function Comment(props) {
   };
 
   function itemRender(current, type, originalElement) {
-    if (type === "prev") {
-      return <div>Previous</div>;
-    }
-    if (type === "next") {
-      return <div>Next</div>;
-    }
+    if (type === "prev") return <div>Previous</div>;
+    if (type === "next") return <div>Next</div>;
     return originalElement;
   }
 
   const ghostLoading = (
     <>
-      <Skeleton avatar active paragraph={{ rows: 4 }} />
-      <Skeleton avatar active paragraph={{ rows: 4 }} />
-      <Skeleton avatar active paragraph={{ rows: 4 }} />
-      <Skeleton avatar active paragraph={{ rows: 4 }} />
-      <Skeleton avatar active paragraph={{ rows: 4 }} />
-      <Skeleton avatar active paragraph={{ rows: 4 }} />
+      {[...Array(10).keys()].map((index) => (
+        <Skeleton key={index} avatar active paragraph={{ rows: 5 }} />
+      ))}
     </>
   );
 

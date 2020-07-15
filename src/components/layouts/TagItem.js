@@ -1,9 +1,8 @@
 import React from "react";
 import { Tag } from "antd";
 
-const TagItem = (props) => {
-  // console.log("rerender tag: " + props.tag);
-  const { state, changeTab } = props;
+const TagItem = ({ state, changeTab, ...props }) => {
+  // console.log(props.tag);
   return (
     <Tag.CheckableTag
       color="green"

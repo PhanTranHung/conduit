@@ -2,9 +2,10 @@ import { connect } from "react-redux";
 import { removeClickedTag } from "../actions/change-tab-actions";
 import Activities from "../components/layouts/Activities";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   // console.log(state);
-  return { state };
+  // console.log(ownProps);
+  return { state: state.changeTab };
 };
 const mapDispatchToProps = (dispatch) => ({
   removeThisTab: (tag) => {
