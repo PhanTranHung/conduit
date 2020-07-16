@@ -9,19 +9,16 @@ export const tagUrl = {
 
 export const articleUrl = {
   url: "articles",
-  params: {
-    limit: 10,
-    offset: "1",
-    tag: "",
-  },
+  limit: 10,
+  offset: "1",
+  tag: "",
 };
 
-export const fetchArticles = ({
-  url = "",
-  limit = 10,
-  offset = 0,
-  tag = "",
-} = articleUrl) => {
+export const fetchArticles = (params) => {
+  const { url, limit, offset, tag } = {
+    ...articleUrl,
+    ...params,
+  };
   // articles?limit=10&offset=0
   return new Promise((resolve, rejects) => {
     axios({

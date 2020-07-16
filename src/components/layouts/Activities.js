@@ -16,7 +16,7 @@ function Activities({ state, removeThisTab, ...props }) {
         onTabClick={(tabName) => removeThisTab(tabName)}
       >
         <TabPane tab="Global Feed" key="global">
-          <Comment {...props} />
+          <Comment {...props} tag="" />
         </TabPane>
 
         {hasSecondTab && (

@@ -1,55 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Badge, Button, List, Tag, Skeleton } from "antd";
 import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
-import { fetchArticles } from "../../requests/API";
+// import { fetchArticles } from "../../requests/API";
+import { connect } from "react-redux";
+import { articleFetchRequest } from "../../actions/fetch-article-actions";
 
 const server = process.env.REACT_APP_SERVER;
 
-let isLoading = true;
-const initAclicle = {
-  //articles{page}[list]
-  articles: {},
-  articlesCount: 0,
-};
-
-function Comment(props) {
-  const [articleList, setArticleList] = useState(initAclicle);
-  const [page, setSelectedPage] = useState(1);
-  // console.log("render commponent: comment " + page + " Tab: " + props.tag);
+function Comment({ state, articleFetchRequest, ...props }) {
+  const [offset, setOffset] = useState(1);
+  console.log("render commponent: comment " + offset + " Tab: " + props.tag);
 
   useEffect(() => {
-    // console.log(articleList);
-    if (!articleList.articles[page]) {
-      isLoading = true;
-      let isMounted = true;
-      setArticleList(null);
-      fetchArticles({ ...props, offset: page })
-        .then((data) => {
-          isLoading = false;
-          if (isMounted) {
-            const d = {
-              articles: { ...articleList.articles, [page]: data.articles },
-              articlesCount: data.articlesCount,
-            };
-            // console.log(d);
-            setArticleList(d);
-          }
-        })
-        .catch((err) => console.error(err));
-      return () => (isMounted = false);
+    // console.log(state);
+    if (!state.tag[props.tag] || !state.tag[props.tag][offset]) {
+      articleFetchRequest(props.tag, offset);
+      //   isLoading = true;
+      //   let isMounted = true;
+      //   setArticleList(null);
+      //   fetchArticles({ ...props, offset: page })
+      //     .then((data) => {
+      //       isLoading = false;
+      //       if (isMounted) {
+      //         const d = {
+      //           articles: { ...articleList.articles, [page]: data.articles },
+      //           articlesCount: data.articlesCount,
+      //         };
+      //         // console.log(d);
+      //         setArticleList(d);
+      //       }
+      //     })
+      //     .catch((err) => console.error(err));
+      //   return () => (isMounted = false);
     }
     // eslint-disable-next-line
-  }, [page]);
+  }, [offset]);
 
   let generateTagChild = (tag, index) => (
-    <Tag key={index} color="lime">
+    <Tag key={tag} color="lime">
       {tag}
     </Tag>
   );
-
-  const changePage = (pageNumber) => {
-    setSelectedPage(pageNumber);
-  };
 
   function itemRender(current, type, originalElement) {
     if (type === "prev") return <div>Previous</div>;
@@ -65,20 +56,20 @@ function Comment(props) {
     </>
   );
 
-  if (isLoading || !articleList) return ghostLoading;
+  if (state.isLoading || !state.tag[props.tag]) return ghostLoading;
 
   const listComment = (
     <List
       itemLayout="vertical"
-      dataSource={articleList.articles[page]}
+      dataSource={state.tag[props.tag][offset]}
       pagination={{
         pageSize: props.pageSize,
-        total: articleList.articlesCount,
+        total: state.articlesCount,
         defaultCurrent: 1,
         showQuickJumper: true,
-        onChange: changePage,
+        onChange: (offset) => setOffset(offset),
         itemRender: itemRender,
-        current: page,
+        current: offset,
         showSizeChanger: false,
       }}
       renderItem={(item) => (
@@ -129,4 +120,6 @@ function Comment(props) {
   return listComment;
 }
 
-export default Comment;
+export default connect((state) => ({ state: state.fetchArticle }), {
+  articleFetchRequest,
+})(Comment);
