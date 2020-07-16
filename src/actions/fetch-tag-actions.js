@@ -3,19 +3,27 @@ export const TAG_FETCH_SUCCEEDED = "TAG_FETCH_SUCCEEDED";
 export const TAG_FETCH_FAILED = "TAG_FETCH_FAILED";
 export const TAG_FETCHING = "TAG_FETCHING";
 
-export const initinalTags = { tags: [], message: "" };
+export const initinalTags = {
+  tags: [],
+  message: "",
+  error: false,
+  isLoading: true,
+};
 
 export const tagFetchRequest = () => ({
   type: TAG_FETCH_REQUEST,
 });
 export const tagFetching = () => ({
   type: TAG_FETCHING,
+  isLoading: true,
 });
 export const tagFetchSucceeded = (tags) => ({
   type: TAG_FETCH_SUCCEEDED,
   tags,
+  isLoading: false,
 });
 export const tagFetchFailed = (message) => ({
   type: TAG_FETCH_FAILED,
   message,
+  isLoading: false,
 });
