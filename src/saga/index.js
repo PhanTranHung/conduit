@@ -1,22 +1,32 @@
 import * as Api from "../requests/API";
-import { put, call, takeLatest } from "redux-saga/effects";
-import * as actions from "../actions/fetch-tag-actions";
+import { put, call, takeLatest, all, fork } from "redux-saga/effects";
+import * as actions from "../actions/fetch-data-actions";
 
-function* fetchTags() {
-  yield put(actions.tagFetching());
+function* fetchData(producer, params = {}) {
+  console.log(params);
+  yield put(actions.dataFetching());
   try {
     debugger;
-    const tags = yield call(Api.fetchTags);
-    yield put(actions.tagFetchSucceeded(tags));
+    const data = yield call(producer);
+    yield put(actions.fetchDataSucceeded(data));
   } catch (e) {
-    yield put(actions.tagFetchFailed(e));
+    yield put(actions.fetchDataFailed(e));
   }
 }
 
-export default function* watchFetchTag() {
-  yield takeLatest(actions.TAG_FETCH_REQUEST, fetchTags);
+function* watchFetchArticles() {
+  yield takeLatest(
+    actions.FETCH_ARTICLES_DATA_REQUEST,
+    fetchData,
+    Api.fetchArticles
+  );
 }
 
-// export default function* root (){
+function* watchFetchTag() {
+  yield takeLatest(actions.FETCH_TAGS_DATA_REQUEST, fetchData, Api.fetchTags);
+}
 
-// }
+export default function* rootSaga() {
+  // console.log(aa);
+  yield all([fork(watchFetchTag), fork(watchFetchArticles)]);
+}

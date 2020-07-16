@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Badge, Button, List, Tag, Skeleton } from "antd";
 import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
-import { fetchArticles } from "../../requests/API";
+import { connect } from "react-redux";
+import { fetchArticlesRequest } from "../../actions/fetch-data-actions";
 
 const server = process.env.REACT_APP_SERVER;
 
@@ -12,32 +13,33 @@ const initAclicle = {
   articlesCount: 0,
 };
 
-function Comment(props) {
+function Comment({ state, fetchArticlesRequest, ...props }) {
   const [articleList, setArticleList] = useState(initAclicle);
   const [page, setSelectedPage] = useState(1);
   // console.log("render commponent: comment " + page + " Tab: " + props.tag);
 
   useEffect(() => {
-    // console.log(articleList);
-    if (!articleList.articles[page]) {
-      isLoading = true;
-      let isMounted = true;
-      setArticleList(null);
-      fetchArticles({ ...props, offset: page })
-        .then((data) => {
-          isLoading = false;
-          if (isMounted) {
-            const d = {
-              articles: { ...articleList.articles, [page]: data.articles },
-              articlesCount: data.articlesCount,
-            };
-            // console.log(d);
-            setArticleList(d);
-          }
-        })
-        .catch((err) => console.error(err));
-      return () => (isMounted = false);
-    }
+    console.log(props);
+    fetchArticlesRequest(props.tag, page);
+    // if (!articleList.articles[page]) {
+    //   setArticleList(null);
+    //   // isLoading = true;
+    //   // let isMounted = true;
+    //   // fetchArticles({ ...props, offset: page })
+    //   //   .then((data) => {
+    //   //     isLoading = false;
+    //   //     if (isMounted) {
+    //   //       const d = {
+    //   //         articles: { ...articleList.articles, [page]: data.articles },
+    //   //         articlesCount: data.articlesCount,
+    //   //       };
+    //   //       // console.log(d);
+    //   //       setArticleList(d);
+    //   //     }
+    //   //   })
+    //   //   .catch((err) => console.error(err));
+    //   // return () => (isMounted = false);
+    // }
     // eslint-disable-next-line
   }, [page]);
 
@@ -66,7 +68,7 @@ function Comment(props) {
   );
 
   if (isLoading || !articleList) return ghostLoading;
-
+  debugger;
   const listComment = (
     <List
       itemLayout="vertical"
@@ -129,4 +131,6 @@ function Comment(props) {
   return listComment;
 }
 
-export default Comment;
+export default connect((state) => ({ state: state.fetchArticle }), {
+  fetchArticlesRequest,
+})(Comment);

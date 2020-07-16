@@ -1,20 +1,22 @@
 import changeTab from "./change-tab-reducer";
 import { initinalTab } from "../actions/change-tab-actions";
-import { initinalTags } from "../actions/fetch-tag-actions";
-import fetchTag from "./fetch-tag-reducer";
+import { initinalData } from "../actions/fetch-data-actions";
+import fetchData from "./fetch-data-reducer";
 import { combineReducers } from "redux";
 
 const initState = {
   changeTab: initinalTab,
-  fetchTag: initinalTags,
+  fetchTag: initinalData,
+  fetchArticle: initinalData,
 };
 
 const reducer = combineReducers({
   changeTab,
-  fetchTag,
+  fetchTag: fetchData,
+  fetchArticle: fetchData,
 });
 
 export default function root(state = initState, action) {
-  //   console.log(state);
+  console.log(state);
   return reducer(state, action);
 }

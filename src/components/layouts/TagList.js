@@ -2,16 +2,18 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import SelecableTag from "../../containers/SelecableTag";
 import { connect } from "react-redux";
-import { tagFetchRequest } from "../../actions/fetch-tag-actions";
+import { fetchTagsRequest } from "../../actions/fetch-data-actions";
+import { Skeleton } from "antd";
 
 const baseUrl = process.env.REACT_APP_SERVER_API;
 axios.defaults.baseURL = baseUrl;
 
-function TagList({ state, tagFetchRequest, ...props }) {
-  console.log(props);
+function TagList({ state, fetchTagsRequest, ...props }) {
+  // console.log(state);
   useEffect(() => {
     // console.log("component");
-    tagFetchRequest();
+    debugger;
+    fetchTagsRequest();
     // eslint-disable-next-line
   }, []);
   debugger;
@@ -20,7 +22,8 @@ function TagList({ state, tagFetchRequest, ...props }) {
       <div className="side-bar-inner">
         <div className="tag-title">{props.title}</div>
         <div className="tag-list">
-          {state.tags.map((tag, index) => (
+          <Skeleton loading={state.isLoading} active round />
+          {state.data.map((tag, index) => (
             <SelecableTag tag={tag} key={tag} />
           ))}
         </div>
@@ -29,5 +32,5 @@ function TagList({ state, tagFetchRequest, ...props }) {
   );
 }
 export default connect((state) => ({ state: state.fetchTag }), {
-  tagFetchRequest,
+  fetchTagsRequest,
 })(TagList);
