@@ -4,34 +4,16 @@ import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
 // import { fetchArticles } from "../../requests/API";
 import { connect } from "react-redux";
 import { articleFetchRequest } from "../../actions/fetch-article-actions";
-
-const server = process.env.REACT_APP_SERVER;
+import { Link } from "react-router-dom";
 
 function Comment({ state, articleFetchRequest, ...props }) {
   const [offset, setOffset] = useState(1);
-  console.log("render commponent: comment " + offset + " Tab: " + props.tag);
+  // console.log("render commponent: comment " + offset + " Tab: " + props.tag);
 
   useEffect(() => {
     // console.log(state);
     if (!state.tag[props.tag] || !state.tag[props.tag][offset]) {
       articleFetchRequest(props.tag, offset);
-      //   isLoading = true;
-      //   let isMounted = true;
-      //   setArticleList(null);
-      //   fetchArticles({ ...props, offset: page })
-      //     .then((data) => {
-      //       isLoading = false;
-      //       if (isMounted) {
-      //         const d = {
-      //           articles: { ...articleList.articles, [page]: data.articles },
-      //           articlesCount: data.articlesCount,
-      //         };
-      //         // console.log(d);
-      //         setArticleList(d);
-      //       }
-      //     })
-      //     .catch((err) => console.error(err));
-      //   return () => (isMounted = false);
     }
     // eslint-disable-next-line
   }, [offset]);
@@ -88,9 +70,11 @@ function Comment({ state, articleFetchRequest, ...props }) {
           className="custom-list"
           actions={[
             <div className="custom-list-item-content-action">
-              <div>
-                <i>read more ...</i>
-              </div>
+              <Link to={`/topic/${item.slug}`}>
+                <div>
+                  <i>read more ...</i>
+                </div>
+              </Link>
               {props.tag && (
                 <div className="tag-list" style={{ maxWidth: "65%" }}>
                   {item.tagList.map(generateTagChild)}
@@ -99,15 +83,17 @@ function Comment({ state, articleFetchRequest, ...props }) {
             </div>,
           ]}
         >
-          <List.Item.Meta
-            avatar={<Avatar src={item.author.image} />}
-            title={
-              <a href={`${server}#@${item.author.username}`}>
-                {item.author.username}
-              </a>
-            }
-            description={item.updatedAt}
-          />
+          <Link to={`/profile/${item.author.username}`}>
+            <List.Item.Meta
+              avatar={<Avatar src={item.author.image} />}
+              title={
+                // <a href={`${server}#@${item.author.username}`}>
+                item.author.username
+                // </a>
+              }
+              description={item.updatedAt}
+            />
+          </Link>
           <div className="custom-list-item">
             <h1>{item.title}</h1>
             <div>{item.body}</div>

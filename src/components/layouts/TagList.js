@@ -9,7 +9,7 @@ const baseUrl = process.env.REACT_APP_SERVER_API;
 axios.defaults.baseURL = baseUrl;
 
 function TagList({ state, tagFetchRequest, ...props }) {
-  console.log(props);
+  // console.log(state);
   useEffect(() => {
     // console.log("component");
     tagFetchRequest();

@@ -15,15 +15,12 @@ export const tagFetchRequest = () => ({
 });
 export const tagFetching = () => ({
   type: TAG_FETCHING,
-  isLoading: true,
 });
 export const tagFetchSucceeded = (tags) => ({
   type: TAG_FETCH_SUCCEEDED,
   tags,
-  isLoading: false,
 });
 export const tagFetchFailed = (message) => ({
   type: TAG_FETCH_FAILED,
   message,
-  isLoading: false,
 });

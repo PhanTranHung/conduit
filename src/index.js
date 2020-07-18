@@ -9,6 +9,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 import saga from "./saga";
+import { BrowserRouter as Router } from "react-router-dom";
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
@@ -28,7 +29,6 @@ const store = createStore(reducer, enhancer);
 
 // mount it on the Store
 // const store = createStore(reducer, applyMiddleware(sagaMiddleware));
-// const store = createStore(reducer, applyMiddleware(sagaMiddleware));
 
 // then run the saga
 sagaMiddleware.run(saga);
@@ -36,7 +36,9 @@ sagaMiddleware.run(saga);
 ReactDOM.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </Provider>,
   // </React.StrictMode>,
   document.getElementById("root")

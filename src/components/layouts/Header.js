@@ -1,5 +1,6 @@
 import React from "react";
-import { Row, Col, Button } from "antd";
+import { Row, Col } from "antd";
+import { NavLink, Link } from "react-router-dom";
 
 function Header() {
   return (
@@ -7,22 +8,37 @@ function Header() {
       <div className="container">
         <Row align="middle" justify="center">
           <Col span={5}>
-            <div className="logo-border">
-              <div className="logo-form">conduit</div>
-            </div>
+            <Link to="/">
+              <div className="logo-border">
+                <div className="logo-form">conduit</div>
+              </div>
+            </Link>
           </Col>
           <Col span={7} offset={12}>
-            <nav>
-              <Button className="nav-item" type="text">
-                <a href="/home">Home</a>
-              </Button>
-              <Button className="nav-item" type="text">
-                <a href="/sign-in">Sign in</a>
-              </Button>
-              <Button className="nav-item" type="text">
-                <a href="sign-up">Sign up</a>
-              </Button>
-            </nav>
+            <NavLink
+              exact
+              className="success success-full_hover radius7 fake-button"
+              activeClassName=" success-outline"
+              to="/"
+            >
+              Home
+            </NavLink>
+            <NavLink
+              exact
+              className="success success-full_hover radius7 fake-button"
+              activeClassName="success-outline"
+              to="/sign-in"
+            >
+              Sign in
+            </NavLink>
+            <NavLink
+              exact
+              className="success success-full_hover radius7 fake-button"
+              activeClassName=" success-outline"
+              to="/sign-up"
+            >
+              Sign up
+            </NavLink>
           </Col>
         </Row>
       </div>

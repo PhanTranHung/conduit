@@ -75,7 +75,6 @@
 }
 
 .banner-border > div {
-  text-align: center;
   color: var(--main-color-white);
 }
 
@@ -124,4 +123,65 @@
 
 .ant-list-item-action > li {
   display: flex;
+}
+nav a {
+  display: inline-flex;
+  border: 1px solid white;
+}
+
+a.active {
+  border: 1px solid var(--main-color-green);
+  border-radius: 9px;
+}
+
+a.active > * {
+  color: var(--main-color-green) !important;
+}
+
+.login-form {
+  max-width: 400px;
+}
+.login-form-forgot {
+  float: right;
+}
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+.login-form-button {
+  width: 100%;
+}
+
+.success {
+  color: var(--main-color-green) !important;
+}
+
+.radius7 {
+  border-radius: 7px;
+}
+
+.success-outline {
+  border: 1px solid var(--main-color-green);
+  border-radius: 7px;
+}
+
+.success-full_hover:hover {
+  background-color: var(--main-color-green);
+  color: var(--main-color-white) !important;
+}
+
+.fake-button {
+  padding: 6px 12px;
+  font-weight: bold;
+}
+
+.ant-input-affix-wrapper:hover,
+.ant-input-affix-wrapper:focus {
+  border-color: var(--main-color-green) !important;
+  /* border-right-width: 1px !important; */
+}
+
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  -webkit-box-shadow: 0 0 0 2px rgba(62, 255, 24, 0.2);
+  box-shadow: 0 0 0 2px rgba(62, 255, 24, 0.2);
 }

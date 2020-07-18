@@ -1,35 +1,42 @@
 import React from "react";
 import "./App.css";
-import { Layout, Row, Col } from "antd";
+import { Layout } from "antd";
 import Header from "./components/layouts/Header";
-import Banner from "./components/layouts/Banner";
-import TagList from "./components/layouts/TagList";
-import TabContainer from "./containers/TabContainer";
+import Signin from "./components/layouts/sign-in/Signin";
+import Home from "./components/layouts/home/Home";
+import Signup from "./components/layouts/sign-up/Signup";
+import Topic from "./components/layouts/topic/Topic";
+import Profile from "./components/layouts/profile/Profile";
 
-const { Footer, Content } = Layout;
+import { Switch, Route } from "react-router-dom";
+
+const { Footer } = Layout;
 
 function App(props) {
   return (
     <Layout style={{ backgroundColor: "white" }}>
       <Header />
-      <Banner />
-      <Content className="page">
-        <div className="container">
-          <Row>
-            <Col span="18">
-              <TabContainer
-                url="articles"
-                limit="10"
-                offset="0"
-                pageSize="10"
-              />
-            </Col>
-            <Col span="6">
-              <TagList url="tags" title="Popular Tags" />
-            </Col>
-          </Row>
-        </div>
-      </Content>
+      <Switch>
+        <Route path="/sign-in">
+          <Signin />
+        </Route>
+        <Route path="/sign-up">
+          <Signup />
+        </Route>
+        <Route path="/topic/:slug" component={Topic}>
+          {/* <Topic /> */}
+        </Route>
+        <Route
+          path="/profile/:slug"
+          render={(propsRoute) => <Profile {...propsRoute} />}
+        >
+          {/* <Profile /> */}
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+
       <Footer>Footer</Footer>
     </Layout>
   );

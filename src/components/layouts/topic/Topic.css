@@ -1,0 +1,10 @@
+.ant-card-meta *,
+.toppic-title {
+  color: var(--main-color-white) !important;
+}
+
+.toppic-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
