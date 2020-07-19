@@ -3,7 +3,7 @@ import { put, call, takeLatest, all, fork } from "redux-saga/effects";
 import * as actions from "../actions/fetch-data-actions";
 
 function* fetchData(producer, params = {}) {
-  console.log(params);
+  // console.log(params);
   yield put(actions.dataFetching());
   try {
     debugger;

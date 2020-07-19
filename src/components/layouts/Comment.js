@@ -19,7 +19,7 @@ function Comment({ state, fetchArticlesRequest, ...props }) {
   // console.log("render commponent: comment " + page + " Tab: " + props.tag);
 
   useEffect(() => {
-    console.log(props);
+    // console.log(props);
     fetchArticlesRequest(props.tag, page);
     // if (!articleList.articles[page]) {
     //   setArticleList(null);

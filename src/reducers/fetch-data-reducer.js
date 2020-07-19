@@ -11,7 +11,8 @@ import {
 } from "../actions/fetch-data-actions";
 
 const fetchTagReducer = (state = initinalData, action) => {
-  debugger;
+  // debugger;
+  console.log(state);
   switch (action.type) {
     case FETCH_ARTICLES_DATA_REQUEST:
       return state;
