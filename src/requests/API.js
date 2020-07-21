@@ -3,6 +3,8 @@ import axios from "axios";
 const baseUrl = process.env.REACT_APP_SERVER_API;
 axios.defaults.baseURL = baseUrl;
 
+const tokenName = "jwt";
+
 export const tagUrl = {
   url: "tags",
 };
@@ -72,9 +74,41 @@ export const fetchTopicComments = (slug) => {
   });
 };
 
+export const deleteCommentInTopic = (slug, commentId) => {
+  // /api/articles/{slug}/comments/{commentId}
+  return new Promise((resolve, rejects) => {
+    axios({
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${localStorage.getItem(tokenName)}`,
+      },
+      url: `articles/${slug}/comments/${commentId}`,
+    })
+      .then((res) => resolve(res.data))
+      .catch((err) => rejects(err));
+  });
+};
+
+export const addNewCommentInTopic = (slug, text) => {
+  // /api/articles/{slug}/comments
+  return new Promise((resolve, rejects) => {
+    axios({
+      method: "POST",
+      url: `articles/${slug}/comments`,
+      headers: {
+        Authorization: `Token ${localStorage.getItem(tokenName)}`,
+      },
+      data: {
+        comment: { body: text },
+      },
+    })
+      .then((res) => resolve(res.data.comment))
+      .catch((err) => rejects(err));
+  });
+};
+
 export const login = ({ email, password, ...other }) => {
   // /api/users/login
-
   return new Promise((resolve, rejects) => {
     axios({
       method: "POST",
@@ -86,7 +120,37 @@ export const login = ({ email, password, ...other }) => {
         },
       },
     })
+      .then((res) => {
+        localStorage.setItem(tokenName, res.data.user.token);
+        return resolve(res.data.user);
+      })
+      .catch((err) => {
+        console.error(err);
+        return rejects(err);
+      });
+  });
+};
+
+export const checkLogin = (params) => {
+  // /api/user
+
+  return new Promise((resolve, rejects) => {
+    if (
+      !localStorage.getItem(tokenName) ||
+      !localStorage.getItem(tokenName).trim()
+    )
+      return rejects("You are not signed in");
+    axios({
+      method: "GET",
+      url: `user`,
+      headers: {
+        Authorization: `Token ${localStorage.getItem(tokenName)}`,
+      },
+    })
       .then((res) => resolve(res.data.user))
-      .catch((err) => rejects(err));
+      .catch((err) => {
+        console.error(err);
+        return rejects(err);
+      });
   });
 };

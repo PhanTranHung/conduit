@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { Layout } from "antd";
 import Header from "./components/layouts/Header";
@@ -7,12 +7,18 @@ import Home from "./components/layouts/home/Home";
 import Signup from "./components/layouts/sign-up/Signup";
 import Topic from "./components/layouts/topic/Topic";
 import Profile from "./components/layouts/profile/Profile";
+import { connect } from "react-redux";
+import { checkLogin } from "./actions/login-actions";
 
 import { Switch, Route } from "react-router-dom";
 
 const { Footer } = Layout;
 
-function App(props) {
+function App({ checkLogin, ...props }) {
+  useEffect(() => {
+    console.log("CHECKLOGIN");
+    checkLogin();
+  }, [checkLogin]);
   return (
     <Layout style={{ backgroundColor: "white" }}>
       <Header />
@@ -42,4 +48,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default connect(null, { checkLogin })(App);

@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./signin.css";
 import { loginRequest } from "../../../actions/login-actions";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 function Signin({ state, loginRequest, ...props }) {
+  const history = useHistory();
+
+  useEffect(() => {
+    if (state.isSigned) history.push("/");
+  }, [state.isSigned, history]);
+
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
     loginRequest(values.email, values.password);

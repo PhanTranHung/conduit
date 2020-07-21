@@ -5,23 +5,31 @@ import Comment from "./Comment";
 
 const { TabPane } = Tabs;
 
-function Activities({ state, removeThisTab, ...props }) {
+function Activities({ state, clickedTab, ...props }) {
   // console.log(props);
-  const hasSecondTab = state.key !== "";
+  const hasThirdTab =
+    state.changeTab.key !== "global" && state.changeTab.key !== "your";
 
   return (
     <div>
       <Tabs
-        activeKey={hasSecondTab ? state.key : "global"}
-        onTabClick={(tabName) => removeThisTab(tabName)}
+        defaultActiveKey="global"
+        activeKey={state.changeTab.key}
+        onTabClick={(tabName) => clickedTab(tabName)}
       >
+        {!state.login.isLoading && state.login.isSigned ? (
+          <TabPane tab="Your Feed" key="your">
+            <Comment {...props} tag="" />
+          </TabPane>
+        ) : null}
+
         <TabPane tab="Global Feed" key="global">
           <Comment {...props} tag="" />
         </TabPane>
 
-        {hasSecondTab && (
-          <TabPane tab={`#${state.key}`} key={state.key}>
-            <Comment {...props} tag={state.key} />
+        {hasThirdTab && (
+          <TabPane tab={`#${state.changeTab.key}`} key={state.changeTab.key}>
+            <Comment {...props} tag={state.changeTab.key} />
           </TabPane>
         )}
       </Tabs>

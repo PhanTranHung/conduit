@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Badge, Button, List, Tag, Skeleton } from "antd";
 import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
-// import { fetchArticles } from "../../requests/API";
 import { connect } from "react-redux";
 import { articleFetchRequest } from "../../actions/fetch-article-actions";
 import { Link } from "react-router-dom";
 
 function Comment({ state, articleFetchRequest, ...props }) {
   const [offset, setOffset] = useState(1);
-  // console.log("render commponent: comment " + offset + " Tab: " + props.tag);
+  console.log("render commponent: comment " + offset + " Tab: " + props.tag);
 
   useEffect(() => {
-    // console.log(state);
+    console.log(state);
     if (!state.tag[props.tag] || !state.tag[props.tag][offset]) {
       articleFetchRequest(props.tag, offset);
     }

@@ -12,5 +12,4 @@ const mapDispatchToProps = (dispatch) => ({
     return dispatch(clickedTag(tag));
   },
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(TagItem);

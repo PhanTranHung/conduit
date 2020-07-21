@@ -1,8 +1,45 @@
 import React from "react";
 import { Row, Col } from "antd";
 import { NavLink, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { logout } from "../../actions/login-actions";
 
-function Header() {
+function Header({ state, logout, ...props }) {
+  let headBar = null;
+
+  if (!state.login.isLoading)
+    if (state.login.isSigned)
+      headBar = (
+        <Link
+          // to="/"
+          className="success success-full_hover radius7 fake-button"
+          onClick={() => logout()}
+        >
+          Sign out
+        </Link>
+      );
+    else
+      headBar = (
+        <>
+          <NavLink
+            exact
+            className="success success-full_hover radius7 fake-button"
+            activeClassName="success-outline"
+            to="/sign-in"
+          >
+            Sign in
+          </NavLink>
+          <NavLink
+            exact
+            className="success success-full_hover radius7 fake-button"
+            activeClassName=" success-outline"
+            to="/sign-up"
+          >
+            Sign up
+          </NavLink>
+        </>
+      );
+
   return (
     <nav className="nav-bar">
       <div className="container">
@@ -23,22 +60,7 @@ function Header() {
             >
               Home
             </NavLink>
-            <NavLink
-              exact
-              className="success success-full_hover radius7 fake-button"
-              activeClassName="success-outline"
-              to="/sign-in"
-            >
-              Sign in
-            </NavLink>
-            <NavLink
-              exact
-              className="success success-full_hover radius7 fake-button"
-              activeClassName=" success-outline"
-              to="/sign-up"
-            >
-              Sign up
-            </NavLink>
+            {headBar}
           </Col>
         </Row>
       </div>
@@ -46,4 +68,11 @@ function Header() {
   );
 }
 
-export default Header;
+export default connect(
+  (state) => ({
+    state: {
+      login: state.login,
+    },
+  }),
+  { logout }
+)(Header);

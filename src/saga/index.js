@@ -1,9 +1,15 @@
 import * as Api from "../requests/API";
-import { put, call, takeLatest, all, fork } from "redux-saga/effects";
+import {
+  put,
+  call,
+  takeLatest,
+  all,
+  fork,
+  takeEvery,
+} from "redux-saga/effects";
 import * as tagActions from "../actions/fetch-tag-actions";
 import * as articleActions from "../actions/fetch-article-actions";
-import * as topicActions from "../actions/fetch-topic-actions";
-import * as topicCommentsActions from "../actions/fetch-topic-comments-action";
+import * as topicActions from "../actions/topic-actions";
 import * as loginActions from "../actions/login-actions";
 
 function* fetchTags() {
@@ -47,23 +53,20 @@ function* fetchTopic(action) {
     yield put(topicActions.topicFetchFailed(e));
   }
 }
-function* watchFetchTopic() {
-  yield takeLatest(topicActions.TOPIC_FETCH_REQUEST, fetchTopic);
-}
-
 function* fetchTopicComments(action) {
-  yield put(topicCommentsActions.articleFetching());
+  yield put(topicActions.topicCommentFetching());
   try {
-    const comments = yield call(Api.fetchTopic, action.slug);
+    const comments = yield call(Api.fetchTopicComments, action.slug);
     debugger;
-    yield put(topicCommentsActions.articleFetchSucceeded(comments));
+    yield put(topicActions.topicCommentFetchSucceeded(comments));
   } catch (e) {
-    yield put(topicCommentsActions.articleFetchFailed(e));
+    yield put(topicActions.topicCommentFetchFailed(e));
   }
 }
-function* watchFetchTopicComments() {
+function* watchFetchTopic() {
+  yield takeLatest(topicActions.TOPIC_FETCH_REQUEST, fetchTopic);
   yield takeLatest(
-    topicCommentsActions.TOPIC_COMMENTS_FETCH_REQUEST,
+    topicActions.TOPIC_COMMENTS_FETCH_REQUEST,
     fetchTopicComments
   );
 }
@@ -72,7 +75,17 @@ function* login(action) {
   yield put(loginActions.loging());
   try {
     const user = yield call(Api.login, action);
-    debugger;
+    console.log(user);
+    yield put(loginActions.loginSucceeded(user));
+  } catch (e) {
+    yield put(loginActions.loginFailed(e));
+  }
+}
+function* checkLogin() {
+  yield put(loginActions.checking());
+  try {
+    const user = yield call(Api.checkLogin);
+    console.log(user);
     yield put(loginActions.loginSucceeded(user));
   } catch (e) {
     yield put(loginActions.loginFailed(e));
@@ -80,6 +93,42 @@ function* login(action) {
 }
 function* watchLogin() {
   yield takeLatest(loginActions.LOGIN_REQUEST, login);
+  yield takeLatest(loginActions.CHECKLOGIN, checkLogin);
+}
+
+function* postComment(action) {
+  try {
+    const comment = yield call(
+      Api.addNewCommentInTopic,
+      action.slug,
+      action.text
+    );
+    console.log("NEW COMMENT", comment);
+    yield put(topicActions.topicCommentNew(comment));
+    yield put(topicActions.postCommentSucceeded(comment));
+  } catch (e) {
+    yield put(topicActions.postCommentFailed(e));
+  }
+}
+
+function* deleteComment(action) {
+  try {
+    yield put(topicActions.removing());
+    const empty = yield call(
+      Api.deleteCommentInTopic,
+      action.slug,
+      action.commentId
+    );
+    yield put(topicActions.removed(empty));
+    yield put(topicActions.topicCommentRemoved(action.commentId));
+  } catch (e) {
+    yield put(topicActions.removeError(e));
+  }
+}
+
+function* watchEditComment() {
+  yield takeEvery(topicActions.POST_COMMENT, postComment);
+  yield takeEvery(topicActions.REMOVE_COMMENT, deleteComment);
 }
 
 export default function* rootSaga() {
@@ -87,7 +136,7 @@ export default function* rootSaga() {
     fork(watchFetchTag),
     fork(watchFetchArticle),
     fork(watchFetchTopic),
-    fork(watchFetchTopicComments),
+    fork(watchEditComment),
     fork(watchLogin),
   ]);
 }
